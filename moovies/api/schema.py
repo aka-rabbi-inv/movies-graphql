@@ -74,6 +74,19 @@ class MovieUpdateMutaion(graphene.Mutation):
         return MovieUpdateMutaion(movie=movie)
 
 
+class MovieDeleteMutaion(graphene.Mutation):
+    class Arguments:
+        id = graphene.ID(required=True)
+
+    movie = graphene.Field(MovieType)
+
+    def mutate(self, info, id):
+        movie = Movie.objects.get(pk=id)
+        movie.delete()
+        return MovieDeleteMutaion(movie=None)
+
+
 class Mutation:
     create_movie = MovieCreateMutation.Field()
     update_movie = MovieUpdateMutaion.Field()
+    delete_movie = MovieDeleteMutaion.Field()

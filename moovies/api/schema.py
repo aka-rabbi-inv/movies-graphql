@@ -5,6 +5,7 @@ from .models import Movie, Director
 import graphql_jwt
 from graphql_jwt.decorators import login_required
 from graphene_django.filter import DjangoFilterConnectionField
+from graphql_relay import from_global_id
 
 
 class MovieType(DjangoObjectType):
@@ -98,6 +99,23 @@ class MovieUpdateMutaion(graphene.Mutation):
         return MovieUpdateMutaion(movie=movie)
 
 
+class MovieUpdateMutaionRelay(relay.ClientIDMutation):
+    class Input:
+        title = graphene.String()
+        id = graphene.ID(required=True)
+
+    movie = graphene.Field(MovieType)
+
+    @classmethod
+    def mutate_and_get_payload(cls, root, info, id, title):
+        movie = Movie.objects.get(pk=from_global_id(id)[1])
+        if title:
+            movie.title = title
+
+        movie.save()
+        return MovieUpdateMutaionRelay(movie=movie)
+
+
 class MovieDeleteMutaion(graphene.Mutation):
     class Arguments:
         id = graphene.ID(required=True)
@@ -116,4 +134,5 @@ class Mutation:
 
     create_movie = MovieCreateMutation.Field()
     update_movie = MovieUpdateMutaion.Field()
+    update_movie_relay = MovieUpdateMutaionRelay.Field()
     delete_movie = MovieDeleteMutaion.Field()

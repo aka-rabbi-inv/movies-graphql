@@ -37,8 +37,13 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "graphene_django",
     "moovies.api",
 ]
+
+GRAPHENE = {
+    "SCHEMA": "moovies.schema.schema",
+}
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",

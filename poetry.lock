@@ -52,6 +52,20 @@ argon2 = ["argon2-cffi (>=19.1.0)"]
 bcrypt = ["bcrypt"]
 
 [[package]]
+name = "django-filter"
+version = "23.3"
+description = "Django-filter is a reusable Django application for allowing users to filter querysets dynamically."
+optional = false
+python-versions = ">=3.7"
+files = [
+    {file = "django-filter-23.3.tar.gz", hash = "sha256:015fe155582e1805b40629344e4a6cf3cc40450827d294d040b4b8c1749a9fa6"},
+    {file = "django_filter-23.3-py3-none-any.whl", hash = "sha256:65bc5d1d8f4fff3aaf74cb5da537b6620e9214fb4b3180f6c560776b1b6dccd0"},
+]
+
+[package.dependencies]
+Django = ">=3.2"
+
+[[package]]
 name = "django-graphql-jwt"
 version = "0.4.0"
 description = "JSON Web Token for Django GraphQL."
@@ -237,4 +251,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "a06ad4d2dc3d3e94b9e7126b7832b0c6a4a333a7954e8786a48038033cf2c15c"
+content-hash = "b4cba8307daa727ee57f81f1afa85df9e650a13f82c7eaf127f4d2d1e907fe2e"

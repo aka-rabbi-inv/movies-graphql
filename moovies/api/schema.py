@@ -1,8 +1,10 @@
 import graphene
+from graphene import relay
 from graphene_django.types import DjangoObjectType
 from .models import Movie, Director
 import graphql_jwt
 from graphql_jwt.decorators import login_required
+from graphene_django.filter import DjangoFilterConnectionField
 
 
 class MovieType(DjangoObjectType):
@@ -20,30 +22,49 @@ class DirectorType(DjangoObjectType):
         model = Director
 
 
+# relay implementation
+class MovieNode(DjangoObjectType):
+    class Meta:
+        model = Movie
+        filter_fields = {
+            "title": [
+                "exact",
+                "icontains",
+                "istartswith",
+            ],
+            "year": [
+                "exact",
+            ],
+        }
+        interfaces = (relay.Node,)
+
+
 class Query(graphene.ObjectType):
-    all_movies = graphene.List(MovieType)
-    movie = graphene.Field(MovieType, id=graphene.Int(), title=graphene.String())
+    # all_movies = graphene.List(MovieType)
+    # movie = graphene.Field(MovieType, id=graphene.Int(), title=graphene.String())
+    all_movies = DjangoFilterConnectionField(MovieNode)
+    movie = relay.Node.Field(MovieNode)
 
     all_directors = graphene.List(DirectorType)
 
-    @login_required
-    def resolve_all_movies(self, info, **kwargs):
-        return Movie.objects.all()
+    # @login_required
+    # def resolve_all_movies(self, info, **kwargs):
+    #     return Movie.objects.all()
 
     def resolve_all_directors(self, info, **kwargs):
         return Director.objects.all()
 
-    def resolve_movie(self, info, **kwargs):
-        id = kwargs.get("id")
-        title = kwargs.get("title")
+    # def resolve_movie(self, info, **kwargs):
+    #     id = kwargs.get("id")
+    #     title = kwargs.get("title")
 
-        if id is not None:
-            return Movie.objects.get(pk=id)
+    #     if id is not None:
+    #         return Movie.objects.get(pk=id)
 
-        if title is not None:
-            return Movie.objects.get(title=title)
+    #     if title is not None:
+    #         return Movie.objects.get(title=title)
 
-        return None
+    #     return None
 
 
 class MovieCreateMutation(graphene.Mutation):
